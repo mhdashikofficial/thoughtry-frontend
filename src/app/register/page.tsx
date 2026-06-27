@@ -175,6 +175,17 @@ export default function Register() {
               />
             </div>
           </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginTop: '8px' }}>
+            <input 
+              type="checkbox" 
+              required 
+              id="terms"
+              style={{ marginTop: '4px', cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--primary)' }} 
+            />
+            <label htmlFor="terms" style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.4' }}>
+              I agree to the <Link href="/terms" target="_blank" style={{ color: 'var(--primary)' }}>Terms of Service</Link> and <Link href="/privacy" target="_blank" style={{ color: 'var(--primary)' }}>Privacy Policy</Link>.
+            </label>
+          </div>
           
           <button type="submit" className="btn-primary" style={{ marginTop: '10px' }}>Create Account</button>
         </form>

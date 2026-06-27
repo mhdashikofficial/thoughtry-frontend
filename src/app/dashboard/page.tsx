@@ -1,14 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Editor from '@/components/Editor';
 
 export default function Dashboard() {
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('<p>Start writing your amazing article here...</p>');
   
-  // Dummy balance data for UI
-  const balance = 45.50; // $45.50
+  const [balance, setBalance] = useState(0);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('thoughtry_user');
+    if (userStr) {
+      try {
+        const parsedUser = JSON.parse(userStr);
+        setUser(parsedUser);
+        setBalance(parsedUser.balance || 0);
+      } catch(e) {
+        console.error(e);
+      }
+    } else {
+      // Redirect to login if not authenticated
+      router.push('/login');
+    }
+  }, [router]);
   
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>

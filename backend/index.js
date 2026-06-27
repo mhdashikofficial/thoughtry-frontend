@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const connectDB = require('./config/db');
 
 // Load env vars
@@ -14,6 +15,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+
+// Serve static files from public/uploads
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));

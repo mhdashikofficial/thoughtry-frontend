@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://46.202.162.27:5000/api/:path*'
+        destination: 'http://infoqio.sbs:5000/api/:path*'
       }
     ];
   }

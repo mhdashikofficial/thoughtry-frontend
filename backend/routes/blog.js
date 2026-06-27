@@ -2,6 +2,27 @@ const express = require('express');
 const router = express.Router();
 const Blog = require('../models/Blog');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, '../public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
 
 // Middleware to verify token
 const protect = (req, res, next) => {
@@ -82,6 +103,18 @@ router.delete('/:id', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
+});
+
+// @route   POST /api/blog/upload
+// @desc    Upload an image
+router.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  
+  // Use the infoqio.sbs domain to serve the static file
+  const imageUrl = `http://infoqio.sbs:5000/uploads/${req.file.filename}`;
+  res.json({ url: imageUrl });
 });
 
 module.exports = router;

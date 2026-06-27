@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://46.202.162.27:5000/api/$1"
+      "destination": "http://infoqio.sbs:5000/api/$1"
     }
   ],
   "headers": [
