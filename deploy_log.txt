@@ -1,21 +1,25 @@
 STDOUT:
 No local changes to save
-Updating 32d7c91..162047c
+Updating 162047c..31b3a4d
 Fast-forward
- backend/config/db.js |   5 +--
- deploy.py            |  25 ++++++++++++
- deploy_log.txt       | 106 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 132 insertions(+), 4 deletions(-)
- create mode 100644 deploy.py
- create mode 100644 deploy_log.txt
+ backend/routes/blog.js                        |  11 +++
+ deploy.py                                     |   7 +-
+ deploy_log.txt                                | 123 ++++----------------------
+ src/app/blog/[subdomain]/page.tsx             |  35 ++++----
+ src/app/blog/[subdomain]/read/[slug]/page.tsx |  58 ++++++++++++
+ src/app/dashboard/page.tsx                    |   6 +-
+ src/app/login/page.tsx                        |  26 +++++-
+ src/app/page.tsx                              |  45 ++++++++++
+ 8 files changed, 183 insertions(+), 128 deletions(-)
+ create mode 100644 src/app/blog/[subdomain]/read/[slug]/page.tsx
 Use --update-env to update environment variables
 [PM2] Applying action restartProcessId on app [all](ids: [ 0 ])
 [PM2] [thoughtry-api](0) ✓
 ┌────┬──────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id │ name             │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├────┼──────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 0  │ thoughtry-api    │ default     │ 1.0.0   │ fork    │ 19262    │ 0s     │ 78   │ online    │ 0%       │ 20.9mb   │ root     │ disabled │
+│ 0  │ thoughtry-api    │ default     │ 1.0.0   │ fork    │ 20416    │ 0s     │ 79   │ online    │ 0%       │ 22.6mb   │ root     │ disabled │
 └────┴──────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
 STDERR:
 From https://github.com/mhdashikofficial/thoughtry-frontend
-   32d7c91..162047c  main       -> origin/main
+   162047c..31b3a4d  main       -> origin/main

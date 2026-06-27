@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-export default async function BlogPost({ params }: { params: { subdomain: string, slug: string } }) {
-  const { subdomain, slug } = params;
+export default async function BlogPost({ params }: { params: Promise<{ subdomain: string, slug: string }> }) {
+  const { subdomain, slug } = await params;
 
   // Fetch the blog post
   const res = await fetch(`http://infoqio.sbs:5000/api/blog/${slug}`, { next: { revalidate: 10 } });

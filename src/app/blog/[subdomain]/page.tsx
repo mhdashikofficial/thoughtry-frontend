@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Globe, BookOpen, User, Hash } from 'lucide-react';
 
-export default async function BloggerIndex({ params }: { params: { subdomain: string } }) {
-  const { subdomain } = params;
+export default async function BloggerIndex({ params }: { params: Promise<{ subdomain: string }> }) {
+  const { subdomain } = await params;
 
   // Fetch user profile and blogs from the backend API
   const res = await fetch(`http://infoqio.sbs:5000/api/blog/user/${subdomain}`, { next: { revalidate: 60 } });
