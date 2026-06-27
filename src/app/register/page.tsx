@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,12 +18,14 @@ export default function Register() {
   const [captchaSvg, setCaptchaSvg] = useState('');
   const [captchaToken, setCaptchaToken] = useState('');
   const [loadingCaptcha, setLoadingCaptcha] = useState(true);
+  
+  // State for the verification step
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
 
   const fetchCaptcha = async () => {
     setLoadingCaptcha(true);
     try {
-      // Assuming a reverse proxy is set up or CORS allows it.
-      // We will route /api/ requests to the backend server.
       const res = await axios.get('/api/auth/captcha');
       setCaptchaSvg(res.data.svg);
       setCaptchaToken(res.data.captchaToken);
@@ -44,14 +48,60 @@ export default function Register() {
         ...formData,
         captchaToken
       });
-      alert(res.data.message || 'Registration successful! Check your email.');
+      setIsRegistered(true);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Registration failed.');
-      // Refresh captcha on failure
       fetchCaptcha();
       setFormData({ ...formData, captchaText: '' });
     }
   };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('/api/auth/verify', {
+        email: formData.email,
+        code: verificationCode
+      });
+      // Verification successful, save token
+      localStorage.setItem('thoughtry_token', res.data.token);
+      localStorage.setItem('thoughtry_user', JSON.stringify(res.data));
+      
+      alert('Email verified successfully! Welcome to Thoughtry.');
+      router.push('/dashboard');
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Verification failed. Please check the code.');
+    }
+  };
+
+  if (isRegistered) {
+    return (
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', padding: '40px', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>Check Your Email</h1>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
+            We've sent a 6-digit verification code to <strong>{formData.email}</strong>.
+          </p>
+          
+          <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div>
+              <input 
+                type="text" 
+                className="input-field" 
+                placeholder="Enter 6-digit code"
+                required
+                style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '1.2rem', padding: '12px' }}
+                maxLength={6}
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+              />
+            </div>
+            <button type="submit" className="btn-primary">Verify Account</button>
+          </form>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
