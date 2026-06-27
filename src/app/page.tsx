@@ -130,10 +130,13 @@ export default function Home() {
         <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           &copy; 2026 Thoughtry. All rights reserved.
         </div>
-        <div style={{ display: 'flex', gap: '24px', fontSize: '0.9rem' }}>
+        <div style={{ display: 'flex', gap: '24px', fontSize: '0.9rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <Link href="/terms" style={{ color: 'var(--text-muted)' }} className="hover-primary">Terms of Service</Link>
           <Link href="/privacy" style={{ color: 'var(--text-muted)' }} className="hover-primary">Privacy Policy</Link>
           <Link href="/faq" style={{ color: 'var(--text-muted)' }} className="hover-primary">FAQ</Link>
+          <Link href="/copyright" style={{ color: 'var(--text-muted)' }} className="hover-primary">Copyright Policy</Link>
+          <Link href="/dmca-complaint" style={{ color: 'var(--text-muted)' }} className="hover-primary">DMCA Complaint</Link>
+          <Link href="/dmca-contact" style={{ color: 'var(--text-muted)' }} className="hover-primary">DMCA Agent</Link>
         </div>
       </footer>
     </main>
