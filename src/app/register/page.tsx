@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -12,13 +13,44 @@ export default function Register() {
     captchaText: '',
   });
 
-  // Captcha token would typically come from an API call
-  // For the UI placeholder, we'll just mock it.
+  const [captchaSvg, setCaptchaSvg] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [loadingCaptcha, setLoadingCaptcha] = useState(true);
+
+  const fetchCaptcha = async () => {
+    setLoadingCaptcha(true);
+    try {
+      // Assuming a reverse proxy is set up or CORS allows it.
+      // We will route /api/ requests to the backend server.
+      const res = await axios.get('/api/auth/captcha');
+      setCaptchaSvg(res.data.svg);
+      setCaptchaToken(res.data.captchaToken);
+    } catch (err) {
+      console.error('Failed to load captcha', err);
+      setCaptchaSvg('<span style="color:red;font-size:12px;">Error loading captcha</span>');
+    } finally {
+      setLoadingCaptcha(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCaptcha();
+  }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementation for hitting backend /api/auth/register goes here
-    alert("Registration logic is ready to be connected to the backend.");
+    try {
+      const res = await axios.post('/api/auth/register', {
+        ...formData,
+        captchaToken
+      });
+      alert(res.data.message || 'Registration successful! Check your email.');
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Registration failed.');
+      // Refresh captcha on failure
+      fetchCaptcha();
+      setFormData({ ...formData, captchaText: '' });
+    }
   };
 
   return (
@@ -75,9 +107,12 @@ export default function Register() {
           <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>Captcha (Security Check)</label>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-              <div style={{ background: '#fff', padding: '8px', borderRadius: '4px', flex: 1, minHeight: '40px', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {/* SVG Captcha loads here */}
-                Loading...
+              <div 
+                style={{ background: '#fff', padding: '8px', borderRadius: '4px', flex: 1, minHeight: '40px', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                onClick={fetchCaptcha}
+                title="Click to refresh captcha"
+              >
+                {loadingCaptcha ? 'Loading...' : <div dangerouslySetInnerHTML={{ __html: captchaSvg }} />}
               </div>
               <input 
                 type="text" 

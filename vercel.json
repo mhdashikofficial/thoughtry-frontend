@@ -3,6 +3,12 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://46.202.162.27:5000/api/$1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
