@@ -36,7 +36,7 @@ export default async function BloggerIndex({ params }: { params: { subdomain: st
           </h2>
           
           {/* Dummy Article Post */}
-          <article className="glass-panel" style={{ padding: '32px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}>
+          <article className="glass-panel hover-lift" style={{ padding: '32px', cursor: 'pointer' }}>
             <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
               <span>June 27, 2026</span>
               <span>•</span>
