@@ -70,6 +70,17 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/blog/public/latest
+// @desc    Get latest global blogs (Public)
+router.get('/public/latest', async (req, res) => {
+  try {
+    const blogs = await Blog.find().sort('-createdAt').limit(6).populate('author', 'username subdomain');
+    res.json(blogs);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // @route   GET /api/blog/user/:subdomain
 // @desc    Get all blogs for a specific subdomain (Public)
 router.get('/user/:subdomain', async (req, res) => {

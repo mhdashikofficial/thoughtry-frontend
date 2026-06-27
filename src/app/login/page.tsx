@@ -9,10 +9,28 @@ export default function Login() {
     password: '',
   });
   
-  const handleSubmit = async (e: React.FormEvent) => {
+  const router = require('next/navigation').useRouter();
+  
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementation for hitting backend /api/auth/login goes here
-    alert("Login logic is ready to be connected to the backend.");
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, password: formData.password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('thoughtry_user', JSON.stringify(data));
+        localStorage.setItem('thoughtry_token', data.token);
+        router.push('/dashboard');
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred during login');
+    }
   };
 
   return (
@@ -23,7 +41,7 @@ export default function Login() {
           <p style={{ color: 'var(--text-muted)' }}>Sign in to your Thoughtry dashboard.</p>
         </div>
         
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>Email Address</label>
             <input 

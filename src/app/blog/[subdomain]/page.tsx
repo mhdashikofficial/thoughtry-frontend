@@ -68,24 +68,29 @@ export default async function BloggerIndex({ params }: { params: { subdomain: st
         </section>
 
         {/* Sidebar */}
-        <aside style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '400px' }}>
-          
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><User size={20} color="var(--accent)" /> About Me</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-              I'm an avid writer and developer sharing my journey. I love exploring new technologies and writing about my experiences. 
+        <aside style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', color: 'var(--text-muted)' }}>About Author</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                {user.username.charAt(0).toUpperCase()}
+              </div>
+              <strong style={{ fontSize: '1.2rem' }}>{user.username}</strong>
+            </div>
+            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem' }}>
+              Welcome to my Thoughtry! I write about technology, life, and everything in between. Subscribe to stay updated with my latest posts.
             </p>
           </div>
-
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><Hash size={20} color="var(--secondary)" /> Tags</h3>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {['Technology', 'Writing', 'Life', 'Tutorial'].map(tag => (
-                <span key={tag} style={{ background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{tag}</span>
-              ))}
-            </div>
+          
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', color: 'var(--text-muted)' }}>Links & Legal</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>My Portfolio</Link></li>
+              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Twitter / X</Link></li>
+              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Frequently Asked Questions</Link></li>
+              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Terms & Conditions</Link></li>
+            </ul>
           </div>
-
         </aside>
       </div>
 

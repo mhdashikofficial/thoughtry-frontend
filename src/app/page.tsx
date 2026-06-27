@@ -1,6 +1,41 @@
 import Link from 'next/link';
 import { ArrowRight, PenTool, TrendingUp, ShieldCheck, Globe, Star } from 'lucide-react';
 
+async function LatestBlogs() {
+  try {
+    const res = await fetch('http://infoqio.sbs:5000/api/blog/public/latest', { next: { revalidate: 60 } });
+    if (!res.ok) return <p style={{ color: 'var(--text-muted)' }}>Could not load latest blogs.</p>;
+    
+    const blogs = await res.json();
+    if (blogs.length === 0) return <p style={{ color: 'var(--text-muted)' }}>No articles published yet.</p>;
+
+    return (
+      <>
+        {blogs.map((blog: any) => {
+          const blogUrl = `http://${blog.author.subdomain}.thoughtry.blog/read/${blog.slug}`;
+          return (
+            <article key={blog._id} className="glass-panel hover-lift" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                <span>•</span>
+                <span style={{ color: 'var(--primary)' }}>{blog.author.subdomain}</span>
+              </div>
+              <h3 style={{ fontSize: '1.4rem', marginBottom: '12px', lineHeight: 1.3 }}>{blog.title}</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '24px', flex: 1 }} dangerouslySetInnerHTML={{ __html: blog.content.substring(0, 100) + '...' }}>
+              </p>
+              <a href={blogUrl} style={{ color: 'var(--primary)', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: 'auto' }}>
+                Read Article &rarr;
+              </a>
+            </article>
+          );
+        })}
+      </>
+    );
+  } catch (err) {
+    return <p style={{ color: 'var(--text-muted)' }}>Failed to load blogs.</p>;
+  }
+}
+
 export default function Home() {
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
@@ -78,6 +113,16 @@ export default function Home() {
             <h3 style={{ fontSize: '1.5rem', marginBottom: '12px' }}>Custom Subdomains</h3>
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>Get your own highly personalized corner of the internet. Customize your homepage, bio, and add your own FAQ/Legal pages.</p>
           </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '100px 5%', zIndex: 10 }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Latest from the Community</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Read what our writers have been publishing recently.</p>
+        </div>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '32px' }}>
+          <LatestBlogs />
         </div>
       </section>
 

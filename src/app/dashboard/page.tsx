@@ -39,7 +39,7 @@ export default function Dashboard() {
   
   const fetchBlogs = async (authToken: string) => {
     try {
-      const res = await fetch('http://infoqio.sbs:5000/api/blog', {
+      const res = await fetch('/api/blog', {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       if (res.ok) {
@@ -55,7 +55,7 @@ export default function Dashboard() {
     if (!title) return alert('Title is required');
     setLoading(true);
     try {
-      const res = await fetch('http://infoqio.sbs:5000/api/blog', {
+      const res = await fetch('/api/blog', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function Dashboard() {
   const deleteArticle = async (id: string) => {
     if (!confirm('Are you sure you want to delete this article?')) return;
     try {
-      const res = await fetch(`http://infoqio.sbs:5000/api/blog/${id}`, {
+      const res = await fetch(`/api/blog/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
