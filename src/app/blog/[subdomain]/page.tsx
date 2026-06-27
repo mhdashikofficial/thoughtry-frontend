@@ -4,9 +4,21 @@ import { Globe, BookOpen, User, Hash } from 'lucide-react';
 export default async function BloggerIndex({ params }: { params: { subdomain: string } }) {
   const { subdomain } = params;
 
-  // In a real implementation, we fetch user profile, config, and blogs from the backend API here.
-  // const res = await fetch(`http://infoqio.sbs:5000/api/public/blogs/${subdomain}`);
-  // const data = await res.json();
+  // Fetch user profile and blogs from the backend API
+  const res = await fetch(`http://infoqio.sbs:5000/api/blog/user/${subdomain}`, { next: { revalidate: 60 } });
+  
+  if (!res.ok) {
+    return (
+      <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <h1 style={{ fontSize: '3rem', marginBottom: '16px' }}>404 Not Found</h1>
+        <p style={{ color: 'var(--text-muted)' }}>The blog for <b>{subdomain}</b> does not exist.</p>
+        <Link href="/" style={{ color: 'var(--primary)', marginTop: '24px' }}>&larr; Back to Thoughtry</Link>
+      </main>
+    );
+  }
+
+  const data = await res.json();
+  const { user, blogs } = data;
 
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -17,7 +29,7 @@ export default async function BloggerIndex({ params }: { params: { subdomain: st
           <div style={{ width: '80px', height: '80px', margin: '0 auto 24px auto', background: 'linear-gradient(135deg, var(--primary), var(--accent))', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 30px rgba(185,56,229,0.3)' }}>
             <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>{subdomain.charAt(0).toUpperCase()}</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '12px', letterSpacing: '-1px' }}>{subdomain}'s Thoughtry</h1>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '12px', letterSpacing: '-1px' }}>{user.username}'s Thoughtry</h1>
           <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto 24px auto' }}>
             Welcome to my personal corner of the internet. Here you'll find my thoughts, articles, and updates.
           </p>
@@ -34,22 +46,25 @@ export default async function BloggerIndex({ params }: { params: { subdomain: st
           <h2 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
             <BookOpen size={24} color="var(--primary)" /> Latest Articles
           </h2>
-          
-          {/* Dummy Article Post */}
-          <article className="glass-panel hover-lift" style={{ padding: '32px', cursor: 'pointer' }}>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-              <span>June 27, 2026</span>
-              <span>•</span>
-              <span>5 min read</span>
-            </div>
-            <h3 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>My First Experience with Thoughtry</h3>
-            <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '24px' }}>
-              Setting up my blog on Thoughtry was an incredible experience. Not only did I get my own personalized subdomain instantly, but the editor was fantastic. I'm excited to share more...
-            </p>
-            <Link href={`/read/my-first-experience`} style={{ color: 'var(--primary)', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              Read Full Article &rarr;
-            </Link>
-          </article>
+          {blogs.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)' }}>No articles published yet.</p>
+          ) : (
+            blogs.map((blog: any) => (
+              <article key={blog._id} className="glass-panel hover-lift" style={{ padding: '32px', cursor: 'pointer' }}>
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                  <span>•</span>
+                  <span>{blog.views} views</span>
+                </div>
+                <h3 style={{ fontSize: '1.8rem', marginBottom: '16px' }}>{blog.title}</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '24px' }} dangerouslySetInnerHTML={{ __html: blog.content.substring(0, 150) + '...' }}>
+                </p>
+                <Link href={`/read/${blog.slug}`} style={{ color: 'var(--primary)', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                  Read Full Article &rarr;
+                </Link>
+              </article>
+            ))
+          )}
         </section>
 
         {/* Sidebar */}

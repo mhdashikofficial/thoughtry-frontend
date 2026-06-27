@@ -70,6 +70,21 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/blog/user/:subdomain
+// @desc    Get all blogs for a specific subdomain (Public)
+router.get('/user/:subdomain', async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const user = await User.findOne({ subdomain: req.params.subdomain });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const blogs = await Blog.find({ author: user._id }).sort('-createdAt');
+    res.json({ user: { username: user.username, subdomain: user.subdomain }, blogs });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // @route   GET /api/blog/:slug
 // @desc    Get single blog post (Public)
 router.get('/:slug', async (req, res) => {

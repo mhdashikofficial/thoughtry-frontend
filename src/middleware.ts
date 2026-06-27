@@ -24,7 +24,11 @@ export function middleware(req: NextRequest) {
   const mainDomain = process.env.NODE_ENV === 'production' ? 'thoughtry.blog' : 'localhost:3000';
   
   // If it's just the main domain or www, do nothing (let it go to app/page.tsx or app/dashboard/...)
-  if (hostname === mainDomain || hostname === `www.${mainDomain}`) {
+  if (
+    hostname === mainDomain || 
+    hostname === `www.${mainDomain}` || 
+    hostname.endsWith('.vercel.app')
+  ) {
     return NextResponse.next();
   }
 
