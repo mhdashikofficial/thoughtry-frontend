@@ -90,7 +90,7 @@ router.get('/user/:subdomain', async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const blogs = await Blog.find({ author: user._id }).sort('-createdAt');
-    res.json({ user: { username: user.username, subdomain: user.subdomain }, blogs });
+    res.json({ user: { username: user.username, subdomain: user.subdomain, theme: user.theme }, blogs });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -100,12 +100,23 @@ router.get('/user/:subdomain', async (req, res) => {
 // @desc    Get single blog post (Public)
 router.get('/:slug', async (req, res) => {
   try {
-    const blog = await Blog.findOne({ slug: req.params.slug }).populate('author', 'username subdomain');
+    const blog = await Blog.findOne({ slug: req.params.slug }).populate('author', 'username subdomain theme');
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     
     // Increment view count
     blog.views += 1;
     await blog.save();
+    
+    // Track daily analytics
+    const Analytics = require('../models/Analytics');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+    
+    await Analytics.findOneAndUpdate(
+      { author: blog.author._id, blog: blog._id, date: today },
+      { $inc: { views: 1 } },
+      { upsert: true, new: true }
+    );
     
     res.json(blog);
   } catch (error) {

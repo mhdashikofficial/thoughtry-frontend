@@ -38,6 +38,20 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  theme: {
+    primaryColor: { type: String, default: '#b938e5' },
+    backgroundColor: { type: String, default: '#0a0a0a' },
+    fontFamily: { type: String, default: 'Inter' },
+    bio: { type: String, default: 'Welcome to my Thoughtry! I write about technology, life, and everything in between.' },
+    navbarLinks: [{
+      label: { type: String },
+      url: { type: String }
+    }],
+    socialLinks: {
+      twitter: { type: String, default: '' },
+      portfolio: { type: String, default: '' }
+    }
+  }
 }, { timestamps: true });
 
 UserSchema.pre('save', async function() {

@@ -10,6 +10,23 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
+// Middleware to verify token
+const protect = (req, res, next) => {
+  let token = req.headers.authorization;
+  if (token && token.startsWith('Bearer')) {
+    try {
+      token = token.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
+    } catch (error) {
+      res.status(401).json({ message: 'Not authorized, token failed' });
+    }
+  } else {
+    res.status(401).json({ message: 'Not authorized, no token' });
+  }
+};
+
 // @route   GET /api/auth/captcha
 // @desc    Generate simple custom captcha
 router.get('/captcha', (req, res) => {
@@ -104,6 +121,7 @@ router.post('/verify', async (req, res) => {
       username: user.username,
       email: user.email,
       subdomain: user.subdomain,
+      theme: user.theme,
       token: generateToken(user._id)
     });
   } catch (error) {
@@ -130,11 +148,39 @@ router.post('/login', async (req, res) => {
         email: user.email,
         subdomain: user.subdomain,
         balance: user.balance,
+        theme: user.theme,
         token: generateToken(user._id)
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/auth/profile
+// @desc    Update user profile & theme
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (req.body.theme) {
+      user.theme = { ...user.theme, ...req.body.theme };
+    }
+
+    await user.save();
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      subdomain: user.subdomain,
+      balance: user.balance,
+      theme: user.theme,
+      token: generateToken(user._id)
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

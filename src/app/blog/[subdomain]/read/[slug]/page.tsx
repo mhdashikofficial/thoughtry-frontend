@@ -17,9 +17,20 @@ export default async function BlogPost({ params }: { params: Promise<{ subdomain
   }
 
   const blog = await res.json();
+  const theme = blog.author?.theme || {};
+  const primaryColor = theme.primaryColor || '#b938e5';
+  const bgColor = theme.backgroundColor || '#0a0a0a';
+  const fontFamily = theme.fontFamily || 'Inter';
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: bgColor, fontFamily: `"${fontFamily}", sans-serif` }}>
+      <style dangerouslySetInnerHTML={{__html: `
+        :root {
+          --primary: ${primaryColor};
+          --accent: ${primaryColor};
+          --background: ${bgColor};
+        }
+      `}} />
       {/* Blog Header */}
       <header style={{ padding: '40px 20px', borderBottom: '1px solid var(--border-color)', textAlign: 'center' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>

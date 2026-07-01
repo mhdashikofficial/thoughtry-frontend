@@ -19,9 +19,20 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
 
   const data = await res.json();
   const { user, blogs } = data;
+  const theme = user.theme || {};
+  const primaryColor = theme.primaryColor || '#b938e5';
+  const bgColor = theme.backgroundColor || '#0a0a0a';
+  const fontFamily = theme.fontFamily || 'Inter';
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: bgColor, fontFamily: `"${fontFamily}", sans-serif` }}>
+      <style dangerouslySetInnerHTML={{__html: `
+        :root {
+          --primary: ${primaryColor};
+          --accent: ${primaryColor};
+          --background: ${bgColor};
+        }
+      `}} />
       <header style={{ padding: '40px 5%', textAlign: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(185,56,229,0.15) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(40px)', zIndex: 0 }}></div>
         
@@ -31,10 +42,12 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
           </div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '12px', letterSpacing: '-1px' }}>{user.username}'s Thoughtry</h1>
           <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto 24px auto' }}>
-            Welcome to my personal corner of the internet. Here you'll find my thoughts, articles, and updates.
+            {theme.bio || "Welcome to my personal corner of the internet. Here you'll find my thoughts, articles, and updates."}
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-color)', background: 'rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem' }}><Globe size={16} /> My Website</a>
+            {theme.socialLinks?.portfolio && (
+              <a href={theme.socialLinks.portfolio} target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-color)', background: 'rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem' }}><Globe size={16} /> My Website</a>
+            )}
           </div>
         </div>
       </header>
@@ -78,19 +91,20 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
               <strong style={{ fontSize: '1.2rem' }}>{user.username}</strong>
             </div>
             <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem' }}>
-              Welcome to my Thoughtry! I write about technology, life, and everything in between. Subscribe to stay updated with my latest posts.
+              {theme.bio || "Welcome to my Thoughtry! I write about technology, life, and everything in between. Subscribe to stay updated with my latest posts."}
             </p>
           </div>
           
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', color: 'var(--text-muted)' }}>Links & Legal</h3>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>My Portfolio</Link></li>
-              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Twitter / X</Link></li>
-              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Frequently Asked Questions</Link></li>
-              <li><Link href={`#`} style={{ color: 'var(--text-main)' }}>Terms & Conditions</Link></li>
-            </ul>
-          </div>
+          {(theme.navbarLinks && theme.navbarLinks.length > 0) && (
+            <div className="glass-panel" style={{ padding: '32px' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', color: 'var(--text-muted)' }}>Links & Legal</h3>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {theme.navbarLinks.map((link: any, idx: number) => (
+                  <li key={idx}><a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-main)' }}>{link.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          )}
         </aside>
       </div>
 
