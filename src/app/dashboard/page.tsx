@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Editor from '@/components/Editor';
 import { LayoutDashboard, PenTool, FileText, Palette, Settings, DollarSign, LogOut, Plus, Trash2, ExternalLink, TrendingUp } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function Dashboard() {
   };
 
   const publishArticle = async () => {
-    if (!title) return alert('Title is required');
+    if (!title) return toast.error('Title is required');
     setLoading(true);
     try {
       const res = await fetch('/api/blog', {
@@ -78,17 +79,17 @@ export default function Dashboard() {
       });
       
       if (res.ok) {
-        alert('Article published successfully!');
+        toast.success('Article published successfully!');
         setTitle('');
         setContent('<p>Start writing your amazing article here...</p>');
         fetchBlogs(token);
         setActiveTab('posts');
       } else {
         const data = await res.json();
-        alert(data.message || 'Error publishing article');
+        toast.error(data.message || 'Error publishing article');
       }
     } catch (err) {
-      alert('Error publishing article');
+      toast.error('Error publishing article');
     }
     setLoading(false);
   };
@@ -101,10 +102,13 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
+        toast.success('Article deleted');
         fetchBlogs(token);
+      } else {
+        toast.error('Error deleting article');
       }
     } catch (err) {
-      alert('Error deleting article');
+      toast.error('Error deleting article');
     }
   };
 
@@ -130,12 +134,12 @@ export default function Dashboard() {
         const data = await res.json();
         setUser(data);
         localStorage.setItem('thoughtry_user', JSON.stringify(data));
-        alert('Theme updated successfully! Visit your blog to see changes.');
+        toast.success('Theme updated successfully! Visit your blog to see changes.');
       } else {
-        alert('Error updating theme');
+        toast.error('Error updating theme');
       }
     } catch (err) {
-      alert('Error saving theme');
+      toast.error('Error saving theme');
     }
     setLoading(false);
   };
@@ -177,6 +181,18 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#050505' }}>
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'rgba(20,20,20,0.8)',
+            backdropFilter: 'blur(10px)',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '12px'
+          }
+        }}
+      />
       {/* Sidebar */}
       <aside style={{ width: '280px', borderRight: '1px solid var(--border-color)', padding: '32px 24px', display: 'flex', flexDirection: 'column', background: 'rgba(255,255,255,0.02)' }}>
         <h2 className="gradient-text" style={{ fontSize: '1.8rem', marginBottom: '40px', display: 'flex', alignItems: 'center', gap: '8px' }}>
