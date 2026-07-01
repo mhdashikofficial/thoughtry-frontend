@@ -22,15 +22,20 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
   const theme = user.theme || {};
   const primaryColor = theme.primaryColor || '#b938e5';
   const bgColor = theme.backgroundColor || '#0a0a0a';
+  const textColor = theme.textColor || '#f3f4f6';
+  const textMuted = theme.textMuted || '#9ca3af';
   const fontFamily = theme.fontFamily || 'Inter';
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: bgColor, fontFamily: `"${fontFamily}", sans-serif` }}>
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: bgColor, color: textColor, fontFamily: `"${fontFamily}", sans-serif` }}>
       <style dangerouslySetInnerHTML={{__html: `
         :root {
           --primary: ${primaryColor};
           --accent: ${primaryColor};
           --background: ${bgColor};
+          --text-main: ${textColor};
+          --text-muted: ${textMuted};
+          --bg-color: ${bgColor};
         }
       `}} />
       <header style={{ padding: '40px 5%', textAlign: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>

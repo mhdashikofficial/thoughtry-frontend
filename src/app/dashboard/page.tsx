@@ -22,6 +22,8 @@ export default function Dashboard() {
   const [theme, setTheme] = useState({
     primaryColor: '#b938e5',
     backgroundColor: '#0a0a0a',
+    textColor: '#f3f4f6',
+    textMuted: '#9ca3af',
     fontFamily: 'Inter',
     bio: '',
     navbarLinks: [{ label: '', url: '' }]
@@ -353,6 +355,22 @@ export default function Dashboard() {
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                     <input type="color" value={theme.backgroundColor} onChange={(e) => setTheme({...theme, backgroundColor: e.target.value})} style={{ width: '50px', height: '50px', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }} />
                     <input type="text" className="input-field" value={theme.backgroundColor} onChange={(e) => setTheme({...theme, backgroundColor: e.target.value})} style={{ flex: 1 }} />
+                  </div>
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', marginBottom: '12px', color: 'var(--text-muted)' }}>Main Text Color</label>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <input type="color" value={theme.textColor} onChange={(e) => setTheme({...theme, textColor: e.target.value})} style={{ width: '50px', height: '50px', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }} />
+                    <input type="text" className="input-field" value={theme.textColor} onChange={(e) => setTheme({...theme, textColor: e.target.value})} style={{ flex: 1 }} />
+                  </div>
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', marginBottom: '12px', color: 'var(--text-muted)' }}>Muted Text Color</label>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <input type="color" value={theme.textMuted} onChange={(e) => setTheme({...theme, textMuted: e.target.value})} style={{ width: '50px', height: '50px', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }} />
+                    <input type="text" className="input-field" value={theme.textMuted} onChange={(e) => setTheme({...theme, textMuted: e.target.value})} style={{ flex: 1 }} />
                   </div>
                 </div>
               </div>

@@ -41,6 +41,8 @@ const UserSchema = new mongoose.Schema({
   theme: {
     primaryColor: { type: String, default: '#b938e5' },
     backgroundColor: { type: String, default: '#0a0a0a' },
+    textColor: { type: String, default: '#f3f4f6' },
+    textMuted: { type: String, default: '#9ca3af' },
     fontFamily: { type: String, default: 'Inter' },
     bio: { type: String, default: 'Welcome to my Thoughtry! I write about technology, life, and everything in between.' },
     navbarLinks: [{
