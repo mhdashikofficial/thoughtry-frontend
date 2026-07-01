@@ -36,9 +36,11 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
           --text-main: ${textColor};
           --text-muted: ${textMuted};
           --bg-color: ${bgColor};
+          --card-bg: color-mix(in srgb, ${textColor} 5%, transparent);
+          --border-color: color-mix(in srgb, ${textColor} 15%, transparent);
         }
       `}} />
-      <header style={{ padding: '40px 5%', textAlign: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.02)', position: 'relative', overflow: 'hidden' }}>
+      <header style={{ padding: '40px 5%', textAlign: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--card-bg)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(185,56,229,0.15) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(40px)', zIndex: 0 }}></div>
         
         <div style={{ position: 'relative', zIndex: 10 }}>
@@ -51,7 +53,7 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             {theme.socialLinks?.portfolio && (
-              <a href={theme.socialLinks.portfolio} target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-color)', background: 'rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem' }}><Globe size={16} /> My Website</a>
+              <a href={theme.socialLinks.portfolio} target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-main)', background: 'var(--card-bg)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem' }}><Globe size={16} /> My Website</a>
             )}
           </div>
         </div>
@@ -114,7 +116,7 @@ export default async function BloggerIndex({ params }: { params: Promise<{ subdo
       </div>
 
       <footer style={{ padding: '40px 5%', borderTop: '1px solid var(--border-color)', textAlign: 'center', color: 'var(--text-muted)' }}>
-        <p>Powered by <Link href="https://thoughtry.blog" style={{ color: 'var(--text-color)', fontWeight: 'bold' }}>Thoughtry</Link></p>
+        <p>Powered by <Link href="https://thoughtry.blog" style={{ color: 'var(--text-main)', fontWeight: 'bold' }}>Thoughtry</Link></p>
       </footer>
     </main>
   );

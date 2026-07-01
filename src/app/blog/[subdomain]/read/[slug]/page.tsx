@@ -34,6 +34,8 @@ export default async function BlogPost({ params }: { params: Promise<{ subdomain
           --text-main: ${textColor};
           --text-muted: ${textMuted};
           --bg-color: ${bgColor};
+          --card-bg: color-mix(in srgb, ${textColor} 5%, transparent);
+          --border-color: color-mix(in srgb, ${textColor} 15%, transparent);
         }
       `}} />
       {/* Blog Header */}
@@ -67,6 +69,7 @@ export default async function BlogPost({ params }: { params: Promise<{ subdomain
       {/* Footer */}
       <footer style={{ padding: '40px 20px', borderTop: '1px solid var(--border-color)', textAlign: 'center', marginTop: '40px' }}>
         <p style={{ color: 'var(--text-muted)', marginBottom: '16px' }}>Thanks for reading!</p>
+        <p>Powered by <Link href="https://thoughtry.blog" style={{ color: 'var(--text-main)', fontWeight: 'bold' }}>Thoughtry</Link></p>
         <Link href={`/`} style={{ color: 'var(--primary)', fontWeight: 'bold' }}>&larr; Back to {subdomain}'s Blog</Link>
       </footer>
     </main>
